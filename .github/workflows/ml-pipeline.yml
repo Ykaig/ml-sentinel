@@ -9,5 +9,13 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
+      # Step 1: Checks out the code from the repository that triggered the pipeline
       - name: Checkout Caller Repo Code
         uses: actions/checkout@v4
+
+      # Step 2: Reads and prints the configuration file for verification
+      - name: Read and Display Model Config
+        run: |
+          echo "--- Reading model configuration ---"
+          cat config/model_config.yaml
+          echo "---------------------------------"
