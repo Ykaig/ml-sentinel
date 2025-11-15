@@ -1,0 +1,9 @@
+name: ML Pipeline
+on:
+  workflow_call:
+    jobs:
+      build-and-test:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout Caller Repo Code
+            uses: actions/checkout@v4
