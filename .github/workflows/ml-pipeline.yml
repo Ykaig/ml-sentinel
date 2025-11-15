@@ -1,9 +1,13 @@
 name: ML Pipeline
+
+# Trigger: this workflow runs when called by another workflow
 on:
   workflow_call:
-    jobs:
-      build-and-test:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout Caller Repo Code
-            uses: actions/checkout@v4
+
+# Jobs: the operations to execute
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Caller Repo Code
+        uses: actions/checkout@v4
