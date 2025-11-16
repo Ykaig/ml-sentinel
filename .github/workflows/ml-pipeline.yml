@@ -6,6 +6,12 @@ on:
     secrets:
       GCP_SA_KEY:
         required: true
+      GCP_PROJECT_ID:
+        required: true
+      GCP_REGION:
+        required: true
+      ARTIFACT_REGISTRY_REPO:
+        required: true
 
 # Jobs: the operations to execute
 jobs:
@@ -47,3 +53,41 @@ jobs:
 
       - name: Run Dummy Training Script
         run: python src/train.py --config-path config/model_config.yaml
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Caller Repo Code
+        uses: actions/checkout@v4
+
+      - name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+      - name: 'Configure Docker'
+        # Use the secrets directly in the command
+        run: gcloud auth configure-docker ${{ secrets.GCP_REGION }}-docker.pkg.dev
+
+      - name: 'Get Model Name'
+        id: get_model_name
+        run: echo "MODEL_NAME=$(yq e '.model_name' config/model_config.yaml)" >> $GITHUB_OUTPUT
+
+      - name: 'Build and Push Docker Image'
+        run: |
+          # Construct the image tag using the secrets
+          IMAGE_TAG=${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPO }}/${{ steps.get_model_name.outputs.MODEL_NAME }}:${{ github.sha }}
+          docker build -t $IMAGE_TAG .
+          docker push $IMAGE_TAG
+
+      - name: 'Deploy to Cloud Run'
+        uses: 'google-github-actions/deploy-cloudrun@v2'
+        with:
+          service: ${{ steps.get_model_name.outputs.MODEL_NAME }}
+          region: ${{ secrets.GCP_REGION }}
+          # Construct the full image path again for deployment
+          image: ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPO }}/${{ steps.get_model_name.outputs.MODEL_NAME }}:${{ github.sha }}
+          allow_unauthenticated: true
