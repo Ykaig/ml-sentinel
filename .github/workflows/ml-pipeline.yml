@@ -3,6 +3,9 @@ name: ML Pipeline
 # Trigger: this workflow runs when called by another workflow
 on:
   workflow_call:
+    secrets:
+      GCP_SA_KEY:
+        required: true
 
 # Jobs: the operations to execute
 jobs:
