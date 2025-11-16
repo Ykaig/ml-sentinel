@@ -33,4 +33,4 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Dummy Training Script
-          run: python src/train.py --config-path config/model_config.yaml
+        run: python src/train.py --config-path config/model_config.yaml
