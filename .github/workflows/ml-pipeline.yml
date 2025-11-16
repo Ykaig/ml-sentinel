@@ -32,5 +32,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # Step 5: Authenticate to Google Cloud
+      - name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      # Step 6: Pull training data from DVC from gcp bucket
+      - name: 'Pull DVC data'
+        run: dvc pull --force
+
       - name: Run Dummy Training Script
         run: python src/train.py --config-path config/model_config.yaml
