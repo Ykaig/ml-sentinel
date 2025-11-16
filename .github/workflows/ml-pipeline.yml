@@ -90,4 +90,4 @@ jobs:
           region: ${{ secrets.GCP_REGION }}
           # Construct the full image path again for deployment
           image: ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPO }}/${{ steps.get_model_name.outputs.MODEL_NAME }}:${{ github.sha }}
-          allow_unauthenticated: true
+          flags: '--allow-unauthenticated'
