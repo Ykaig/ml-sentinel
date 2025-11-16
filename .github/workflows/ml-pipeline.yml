@@ -47,12 +47,21 @@ jobs:
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
-      # Step 6: Pull training data from DVC from gcp bucket
+      # Step 7: Pull training data from DVC from gcp bucket
       - name: 'Pull DVC data'
         run: dvc pull --force
 
-      - name: Run Dummy Training Script
+      - name: Run Training Script
         run: python src/train.py --config-path config/model_config.yaml
+
+      # Step 8: Upload the 'artifacts' folder so it can be used in the next job
+      - name: Upload Model Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-artifacts
+          path: artifacts/
+
+
   deploy:
     needs: build-and-test
     runs-on: ubuntu-latest
@@ -60,6 +69,13 @@ jobs:
     steps:
       - name: Checkout Caller Repo Code
         uses: actions/checkout@v4
+
+      # Download the artifacts that were created in the previous job
+      - name: Download Model Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: model-artifacts
+          path: artifacts/
 
       - name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v2'
