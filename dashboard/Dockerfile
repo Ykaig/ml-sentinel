@@ -30,7 +30,6 @@ COPY --from=builder /app/public ./public
 # Expose port 3000 (default for Next.js)
 EXPOSE 3000
 
-# Cloud Run injects the PORT env var, so we use it. Default to 3000 for local.
 ENV PORT 3000
 
 # Command to start the Node.js server
