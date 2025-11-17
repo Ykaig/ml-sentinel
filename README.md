@@ -1,5 +1,5 @@
 # ml-sentinel
-> An agnostic MLOps platform to automate the build, deployment, and monitoring of any ML model.
+> An agnostic MLOps platform to automate the build, deployment and monitoring of any ML model
 
 [![CI Pipeline Status](https://github.com/Ykaig/toxic-comment-classifier/actions/workflows/main-ci.yml/badge.svg)](https://github.com/Ykaig/toxic-comment-classifier/actions/workflows/main-ci.yml)
 
