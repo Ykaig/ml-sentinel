@@ -14,7 +14,7 @@ type DeployedModel = {
 
 const TOXIC_COMMENT_API_URL = process.env.NEXT_PUBLIC_TOXIC_COMMENT_API_URL;
 
-// Initial state of our models. We only have one real model for now.
+// Initial state of the models
 const initialModels: DeployedModel[] = [
   {
     name: 'toxic-comment-classifier',
@@ -22,7 +22,6 @@ const initialModels: DeployedModel[] = [
     url: TOXIC_COMMENT_API_URL || '#',
     lastChecked: 'N/A',
   },
-  // You can add more models here as you deploy them
 ];
 
 // A simple component to render a status badge with appropriate colors
