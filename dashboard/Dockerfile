@@ -30,7 +30,7 @@ COPY --from=builder /app/public ./public
 # Expose port 3000 (default for Next.js)
 EXPOSE 3000
 
-ENV PORT 3000
+ENV PORT=3000
 
 # Command to start the Node.js server
 CMD ["node", "server.js"]
