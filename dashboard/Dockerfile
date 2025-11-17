@@ -1,7 +1,7 @@
 # dashboard/Dockerfile
 
 # Stage 1: Build the Next.js application
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy package.json and lock files
@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Create the final, small production image
-FROM node:18-alpine
+FROM node:20-alpine
 WORKDIR /app
 
 # Copy the standalone output from the builder stage
