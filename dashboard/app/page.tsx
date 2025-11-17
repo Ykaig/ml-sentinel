@@ -103,36 +103,38 @@ export default function Home() {
           <div className="px-4 py-6 sm:px-0">
             <div className="bg-white shadow overflow-hidden sm:rounded-lg">
               <ul role="list" className="divide-y divide-gray-200">
-                {models.map((model) => (
-                  <li key={model.name}>
-                    <a href={model.url} target="_blank" rel="noopener noreferrer" className="block hover:bg-gray-50">
-                      <div className="px-4 py-4 sm:px-6">
-                        <div className="flex items-center justify-between">
-                          <p className="text-md font-medium text-indigo-600 truncate">
-                            {model.name}
-                          </p>
-                          <div className="ml-2 flex-shrink-0 flex">
-                            <StatusBadge status={model.status} />
-                          </div>
-                        </div>
-                        <div className="mt-2 sm:flex sm:justify-between">
-                          <div className="sm:flex">
-                            <p className="flex items-center text-sm text-gray-500">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0l-1.5-1.5a2 2 0 112.828-2.828l1.5 1.5a.5.5 0 00.707 0l3-3a.5.5 0 00-.707-.707l-3 3a1 1 0 01-1.414 0l-1.5-1.5a1 1 0 10-1.414 1.414l1.5 1.5a3 3 0 004.242 0l3-3a3 3 0 00-4.242-4.242l-3 3a.5.5 0 00.707.707l3-3z" clipRule="evenodd" />
-                              </svg>
-                              {model.url}
-                            </p>
-                          </div>
-                          <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                            <p>Last checked: {model.lastChecked}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  </li>
-                ))}
-              </ul>
+  {models.map((model) => (
+    <li key={model.name} className="px-4 py-4 sm:px-6"> {/* Sposta padding e key qui */}
+      <div className="flex items-center justify-between">
+        <p className="text-md font-medium text-indigo-600 truncate">
+          {model.name}
+        </p>
+        <div className="ml-2 flex-shrink-0 flex">
+          <StatusBadge status={model.status} />
+        </div>
+      </div>
+      <div className="mt-2 sm:flex sm:justify-between">
+        <div className="sm:flex">
+          {/* Rendi solo l'URL un link cliccabile */}
+          <a
+            href={model.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center text-sm text-gray-500 hover:text-indigo-600"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0l-1.5-1.5a2 2 0 112.828-2.828l1.5 1.5a.5.5 0 00.707 0l3-3a.5.5 0 00-.707-.707l-3 3a1 1 0 01-1.414 0l-1.5-1.5a1 1 0 10-1.414 1.414l1.5 1.5a3 3 0 004.242 0l3-3a3 3 0 00-4.242-4.242l-3 3a.5.5 0 00.707.707l3-3z" clipRule="evenodd" />
+            </svg>
+            {model.url}
+          </a>
+        </div>
+        <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+          <p>Last checked: {model.lastChecked}</p>
+        </div>
+      </div>
+    </li>
+  ))}
+</ul>
             </div>
           </div>
         </div>
