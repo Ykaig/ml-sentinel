@@ -56,8 +56,6 @@ export default function Home() {
 
         console.log(`Checking health for ${model.name} at URL: ${model.url}`);
 
-        // We only check models with a real URL
-        //if (model.url.startsWith('https://')) {
         try {
           // Fetch the root endpoint of the deployed API.
 
@@ -72,7 +70,7 @@ export default function Home() {
           // If fetch fails (e.g., timeout, network error), mark as offline
           return { ...model, status: 'Offline' as const, lastChecked: new Date().toLocaleString() };
         }
-        // }
+
         // If the check fails for any reason, return the model with an 'Offline' status
         return { ...model, status: 'Offline' as const, lastChecked: new Date().toLocaleString() };
       });
