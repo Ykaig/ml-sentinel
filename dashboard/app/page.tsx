@@ -5,7 +5,6 @@
 
 import { useState, useEffect } from 'react';
 
-// Define a type for our model data
 type DeployedModel = {
   name: string;
   status: 'Checking...' | 'Operational' | 'Offline';
