@@ -1,0 +1,48 @@
+# .github/workflows/deploy-dashboard.yml
+
+name: Deploy Dashboard
+
+on:
+  push:
+    branches:
+      - main
+    # Only run this workflow if files inside the 'dashboard' directory have changed
+    paths:
+      - 'dashboard/**'
+
+jobs:
+  deploy-dashboard:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: 'Configure Docker'
+        run: gcloud auth configure-docker ${{ secrets.GCP_REGION }}-docker.pkg.dev
+
+      - name: 'Build and Push Docker Image'
+        run: |
+          IMAGE_TAG=${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPO }}/ml-sentinel-dashboard:${{ github.sha }}
+          # Build the image from the 'dashboard' subdirectory
+          docker build -t $IMAGE_TAG -f dashboard/Dockerfile dashboard
+          docker push $IMAGE_TAG
+          
+      - name: 'Deploy to Cloud Run'
+        uses: 'google-github-actions/deploy-cloudrun@v2'
+        with:
+          service: 'ml-sentinel-dashboard' # A new, distinct service name
+          region: ${{ secrets.GCP_REGION }}
+          image: ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPO }}/ml-sentinel-dashboard:${{ github.sha }}
+          flags: '--allow-unauthenticated'
+          # Pass the API URL as an environment variable to the dashboard container
+          env_vars: |
+            NEXT_PUBLIC_TOXIC_COMMENT_API_URL=${{ secrets.NEXT_PUBLIC_TOXIC_COMMENT_API_URL }}
